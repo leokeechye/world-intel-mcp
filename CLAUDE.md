@@ -89,3 +89,6 @@ Only these unlock additional data sources (everything else works unauthenticated
 ## Testing
 
 Tests use `respx` to mock httpx responses. Fixtures in `conftest.py` provide `cache` (tmp_path SQLite) and `fetcher` (with clean breaker). Tests are async (`pytest-asyncio` in auto mode). Proxy env vars are stripped automatically.
+
+- `testpaths` is `src/world_intel_mcp/tests` and `addopts` defaults to `-m 'not smoke'`, so a plain `pytest` runs only the mocked unit tests.
+- Live-API tests are marked `@pytest.mark.smoke` and deselected by default. Run them explicitly with `pytest -m smoke` (these hit real upstream APIs).

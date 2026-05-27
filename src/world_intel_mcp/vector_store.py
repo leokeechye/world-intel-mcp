@@ -12,6 +12,7 @@ import asyncio
 import hashlib
 import json
 import logging
+import os
 import time
 from dataclasses import dataclass
 from datetime import datetime, timezone
@@ -30,7 +31,7 @@ _qdrant_client = None
 COLLECTION_NAME = "world_intel"
 EMBEDDING_MODEL = "BAAI/bge-small-en-v1.5"  # FastEmbed ONNX model (~45MB, fast)
 EMBEDDING_DIM = 384
-QDRANT_URL = "http://localhost:6333"
+QDRANT_URL = os.environ.get("QDRANT_URL", "http://localhost:6333")
 
 # Maximum text length to embed (chars).  Longer text is truncated.
 MAX_EMBED_CHARS = 2000

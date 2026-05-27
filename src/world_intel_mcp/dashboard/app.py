@@ -7,6 +7,7 @@ All data pulled from the same source modules used by the MCP server.
 import asyncio
 import json
 import logging
+import os
 from contextlib import asynccontextmanager
 from datetime import datetime, timezone
 from pathlib import Path
@@ -648,9 +649,16 @@ app = Starlette(
 )
 
 
-def run(host: str = "127.0.0.1", port: int = 8501) -> None:
-    """Launch the dashboard server."""
+def run(host: str | None = None, port: int | None = None) -> None:
+    """Launch the dashboard server.
+
+    Host/port default to the HOST/PORT env vars (PORT is set by Railway and
+    most PaaS), falling back to localhost:8501 for local use.
+    """
     import uvicorn
+
+    host = host or os.environ.get("HOST", "127.0.0.1")
+    port = port or int(os.environ.get("PORT", "8501"))
 
     logger.info("Starting Intelligence Dashboard on http://%s:%d", host, port)
     uvicorn.run(

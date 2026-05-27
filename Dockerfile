@@ -16,7 +16,11 @@ COPY src ./src
 # PDF (weasyprint) is intentionally omitted — the /api/report/pdf route is a stub.
 RUN pip install --upgrade pip && pip install ".[dashboard,vector]"
 
+COPY docker-entrypoint.sh ./
+RUN chmod +x docker-entrypoint.sh
+
 # Cosmetic; Railway routes to whatever $PORT the app binds.
 EXPOSE 8501
 
-CMD ["intel-dashboard"]
+# SERVICE_ROLE selects dashboard (default) vs collector daemon.
+CMD ["./docker-entrypoint.sh"]

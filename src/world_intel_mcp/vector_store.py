@@ -540,13 +540,13 @@ class VectorStore:
 
         query_filter = Filter(must=conditions) if conditions else None
 
-        results = client.search(
+        results = client.query_points(
             collection_name=COLLECTION_NAME,
-            query_vector=vector,
+            query=vector,
             query_filter=query_filter,
             limit=limit,
             with_payload=True,
-        )
+        ).points
 
         return {
             "query": query,
@@ -606,13 +606,13 @@ class VectorStore:
             cutoff = time.time() - (hours * 3600)
             conditions.append(FieldCondition(key="timestamp", range=Range(gte=cutoff)))
 
-        results = client.search(
+        results = client.query_points(
             collection_name=COLLECTION_NAME,
-            query_vector=vector,
+            query=vector,
             query_filter=Filter(must=conditions),
             limit=limit,
             with_payload=True,
-        )
+        ).points
 
         return {
             "reference_domain": domain,
@@ -776,13 +776,13 @@ class VectorStore:
             conditions.append(FieldCondition(key="timestamp", range=Range(gte=cutoff)))
 
         # Fetch more results to ensure coverage across domains
-        results = client.search(
+        results = client.query_points(
             collection_name=COLLECTION_NAME,
-            query_vector=vector,
+            query=vector,
             query_filter=Filter(must=conditions),
             limit=100,
             with_payload=True,
-        )
+        ).points
 
         # Group by category, keep top N per category
         by_category: dict[str, list[dict]] = {}
